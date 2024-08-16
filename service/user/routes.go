@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-playground/validator"
 	"github.com/gorilla/mux"
+	"github.com/mndozkn/go-ecom/config"
 	"github.com/mndozkn/go-ecom/service/auth"
 	"github.com/mndozkn/go-ecom/types"
 	"github.com/mndozkn/go-ecom/utils"
@@ -50,7 +51,14 @@ func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.WriteJSON(w, http.StatusOK, map[string]string{"token": ""})
+	secret := []byte(config.Envs.JWTSecret)
+	token, err := auth.CreateJWT(secret, u.ID)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, map[string]string{"token": token})
 }
 
 func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
