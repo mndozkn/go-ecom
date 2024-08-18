@@ -71,6 +71,11 @@ func TestUserServiceHandlers(t *testing.T) {
 
 type mockUserStore struct{}
 
+// GetUserByID implements types.UserStore.
+func (m *mockUserStore) GetUserByID(id int) (*types.User, error) {
+	panic("unimplemented")
+}
+
 func (m *mockUserStore) GetUserByEmail(email string) (*types.User, error) {
 	return nil, fmt.Errorf("user not found")
 }
