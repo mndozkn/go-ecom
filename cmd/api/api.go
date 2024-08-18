@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/mndozkn/go-ecom/service/product"
 	"github.com/mndozkn/go-ecom/service/user"
 )
 
@@ -29,6 +30,10 @@ func (s *APISERVER) Run() error {
 
 	userHandler := user.NewHandler(userStore)
 	userHandler.RegisterRoutes(subrouter)
+
+	productStore := product.NewStore(s.db)
+	productHandler := product.NewHandler(productStore)
+	productHandler.RegisterRoutes(subrouter)
 
 	log.Println("Listening on", s.addr)
 
